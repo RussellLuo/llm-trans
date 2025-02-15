@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "llm_translate"
+version = "0.0.1"
+description = "Your personal Language Translator powered by LLMs."
+authors = [
+    "Your Name <you@example.com>",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10.0,<3.14"
+coagent = { git = "https://github.com/OpenCSGs/coagent.git", rev = "de1714cb202337b311025ac4f67521c0673dd835" }
+gradio = "5.16.0"
+pyyaml = "6.0.2"
+
+[tool.poetry.scripts]
+llm-translate= "llm_translate.cli:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

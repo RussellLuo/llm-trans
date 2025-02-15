@@ -1,0 +1,37 @@
+# Supported LLMs
+llms:
+- title: GPT-4o
+  model: openai/gpt-4o
+  api_key: ${OPENAI_API_KEY}
+- title: DeepSeek-R1
+  model: openai/deepseek-reasoner
+  api_base: https://api.deepseek.com/v1
+  api_key: ${DEEPSEEK_API_KEY}
+- title: Your LLM
+  model: your-model
+  api_base: your-api-base
+  api_version: your-api-version
+  api_key: your-api-key # plain key string, or environment variable: ${YOUR_API_KEY}
+
+# Supported languages
+languages:
+- title: English 🇺🇸
+  language: English 
+- title: 中文 (简体) 🇨🇳
+  language: Chinese (Simplified)
+- title: 中文 (繁體) 🇨🇳
+  language: Chinese (Traditional)
+- title: Français 🇫🇷
+  language: French
+- title: Deutsch 🇩🇪
+  language: German
+- title: Русский 🇷🇺
+  language: Russian
+- title: Español 🇪🇸
+  language: Spanish
+- title: Italiano 🇮🇹
+  language: 
+- title: 한국어 🇰🇷
+  language: Korean
+- title: 日本語 🇯🇵
+  language: Japanese
