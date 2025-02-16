@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llm-trans"
-version = "0.1.0"
+version = "0.2.0"
 description = "Your personal Language Translator powered by LLMs."
 authors = ["RussellLuo <luopeng.he@gmail.com>"]
 packages = [{include = "llm_trans"}]

@@ -6,6 +6,9 @@ import yaml
 
 from .translator import Translator
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+favicon_path = os.path.join(current_dir, "favicon.ico")
+
 
 css = """
 .form {
@@ -18,10 +21,14 @@ textarea::placeholder {
 textarea[placeholder="Translation"] {
   background-color: rgb(248,249,250);
 }
+footer {
+  visibility: hidden;
+}
 """
 
 # See https://github.com/gradio-app/gradio/issues/6101.
 shortcut_js = """
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 <script>
 document.addEventListener("keydown", function(e) {
   if (e.key == "Enter" && (e.ctrlKey || e.shiftKey || e.metaKey)) {
@@ -75,7 +82,10 @@ class App:
             self.demo = demo
 
             with gr.Sidebar():
-                with gr.Tab("Settings"):
+                gr.HTML("""\
+<a class="github-button" href="https://github.com/RussellLuo/llm-trans" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" aria-label="Star buttons/github-buttons on GitHub">Star</a>\
+""")
+                with gr.Tab("🛠 Settings"):
                     llm = gr.Dropdown(
                         label="LLM",
                         choices=self.LLMS,
@@ -144,4 +154,4 @@ class App:
     def run(
         self, server_port: int = 7860, quiet: bool = False, inbrowser: bool = True
     ) -> None:
-        self.demo.launch(server_port=server_port, quiet=quiet, inbrowser=inbrowser)
+        self.demo.launch(server_port=server_port, quiet=quiet, inbrowser=inbrowser, favicon_path=favicon_path)

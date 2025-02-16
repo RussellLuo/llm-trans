@@ -1,4 +1,4 @@
-# LLM Translate
+# 🌐 LLM Translate
 
 Your personal Language Translator powered by LLMs.
 

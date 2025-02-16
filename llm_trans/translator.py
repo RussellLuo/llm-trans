@@ -90,11 +90,15 @@ Your output must be one of the following languages (and nothing else):
         )
         msg = ChatMessage.decode(result)
         detected = msg.content
-        # print(f"Detected language: {detected}")
 
+        if detected.startswith("Failed to chat with"):
+            raise gr.Error(detected)
+
+        # print(f"Detected language: {detected}")
         if detected in self.candidate_languages:
             return detected
-        return "auto"  # Fallback to "auto"
+        else:
+            return "auto"  # Fallback to "auto"
 
     async def translate(
         self, input_text: str, source_lang: str, target_lang: str
