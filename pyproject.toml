@@ -1,8 +1,10 @@
 [tool.poetry]
-name = "llm-translate"
-version = "0.1.0"
+name = "llm-trans"
+version = "0.0.0"
 description = "Your personal Language Translator powered by LLMs."
 authors = ["RussellLuo <luopeng.he@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/RussellLuo/llm-trans"
 
 [tool.poetry.dependencies]
 python = ">=3.10.0,<3.14"
@@ -11,7 +13,7 @@ gradio = "5.16.0"
 pyyaml = "6.0.2"
 
 [tool.poetry.scripts]
-llm-translate= "llm_translate.cli:main"
+llmt= "llm_trans.cli:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -6,7 +6,7 @@ Your personal Language Translator powered by LLMs.
 ## Installation
 
 ```bash
-pip install git+https://github.com/RussellLuo/llm-translate.git
+pip install llm-trans
 ```
 
 
@@ -16,7 +16,7 @@ Copy [settings.yaml](./settings.yaml) to your local directory, and run LLM Trans
 
 ```bash
 export OPENAI_API_KEY="your-openai-key"
-llm-translate ./settings.yaml
+llm-trans ./settings.yaml
 ```
 
 > You can also add your own LLM by changing the settings as below:
