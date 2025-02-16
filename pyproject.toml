@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "llm-trans"
-version = "0.0.0"
+version = "0.1.0"
 description = "Your personal Language Translator powered by LLMs."
 authors = ["RussellLuo <luopeng.he@gmail.com>"]
 readme = "README.md"
