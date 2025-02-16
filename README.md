@@ -3,7 +3,7 @@
 Your personal Language Translator powered by LLMs.
 
 <p align="center">
-<img src="screenshot.png" height="500">
+<img src="screenshot.png" height="400">
 </p>
 
 
@@ -34,3 +34,14 @@ llm-trans ./settings.yaml
 >   api_version: your-api-version
 >   api_key: your-api-key # plain key string, or environment variable: ${YOUR_API_KEY}
 > ```
+
+
+## Why?
+
+LLM Translate is like traditional translation tools (e.g. [Google Translate][1]) but is powered by LLMs:
+
+- LLMs are very good at language translation and are still evolving rapidly.
+- Any local or online LLMs are supported.
+
+
+[1]: https://translate.google.com/
