@@ -2,6 +2,10 @@
 
 Your personal Language Translator powered by LLMs.
 
+<p align="center">
+<img src="screenshot.png" height="500">
+</p>
+
 
 ## Installation
 
