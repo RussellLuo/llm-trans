@@ -43,7 +43,9 @@ jobs:
         run: poetry install --no-interaction --no-root
 
       - name: Build release distributions
-        run: poetry build
+        run: |
+          ls -R .
+          poetry build --verbose
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
