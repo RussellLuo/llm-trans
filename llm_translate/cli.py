@@ -1,7 +1,9 @@
 import argparse
 
 from coagent.core import set_stderr_logger
-from .app import App
+
+from .app import App, load_settings
+from .translator import Translator
 
 
 def main():
@@ -12,14 +14,25 @@ def main():
         "settings", type=str, help="The path to the settings file (in YAML)."
     )
     parser.add_argument(
-        "--port", type=int, help="The port number (optional).", default=7860
+        "--port",
+        type=int,
+        default=7860,
+        help="The port number. (Defaults to %(default)r)",
+    )
+    parser.add_argument(
+        "--level",
+        type=str,
+        default="INFO",
+        help="The logging level. (Defaults to %(default)r)",
     )
     args = parser.parse_args()
 
-    set_stderr_logger()
+    set_stderr_logger(args.level)
 
-    app = App(args.settings)
-    app.build()
+    llms, languages = load_settings(args.settings)
+    translator = Translator(languages)
+    app = App(llms, languages)
+    app.build(translator)
     app.run(server_port=args.port, quiet=True, inbrowser=True)
 
 

@@ -1,14 +1,12 @@
 [tool.poetry]
-name = "llm_translate"
-version = "0.0.1"
+name = "llm-translate"
+version = "0.1.0"
 description = "Your personal Language Translator powered by LLMs."
-authors = [
-    "Your Name <you@example.com>",
-]
+authors = ["RussellLuo <luopeng.he@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.10.0,<3.14"
-coagent = { git = "https://github.com/OpenCSGs/coagent.git", rev = "de1714cb202337b311025ac4f67521c0673dd835" }
+coagent-python = "0.0.1"
 gradio = "5.16.0"
 pyyaml = "6.0.2"
 

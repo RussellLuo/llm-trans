@@ -1,14 +1,11 @@
 import json
 from typing import AsyncIterator
 
-from coagent.agents import ChatMessage, ModelClient
+from coagent.agents import ChatAgent, ChatMessage, ModelClient
 from coagent.agents.structured_agent import StructuredAgent
-from coagent.core import AgentSpec, Message, new, set_stderr_logger
+from coagent.core import AgentSpec, Message, new
 from coagent.runtimes import LocalRuntime
 import gradio as gr
-
-
-set_stderr_logger()
 
 
 class Input(Message):
@@ -18,57 +15,89 @@ class Input(Message):
 
 
 class Translator:
-    runtime = LocalRuntime()
-    started: bool = False
+    def __init__(self, languages: list[str]) -> None:
+        self.runtime = LocalRuntime()
+        self.started: bool = False
+        self.candidate_languages = [lang for _, lang in languages[1:]]  # Exclude "auto"
 
-    agent = AgentSpec(
-        "translator",
-        new(
-            StructuredAgent,
-            input_type=Input,
-            system="""
+        langs = "\n".join([f"- {lang}" for lang in self.candidate_languages])
+        self.detector = AgentSpec(
+            "detector",
+            new(
+                ChatAgent,
+                system=f"""\
+You are a language detector who is dedicated to detect the language of the given text.
+
+Your output must be one of the following languages (and nothing else):
+{langs}
+""",
+            ),
+        )
+
+        self.agent = AgentSpec(
+            "translator",
+            new(
+                StructuredAgent,
+                input_type=Input,
+                system="""
     {%- if source_lang == "auto" -%}
     You are a professional translator who is dedicated to translate the given text to {{ target_lang }}.
     {%- else -%}
     You are a professional translator who is dedicated to translate the given text from {{ source_lang }} to {{ target_lang }}.
     {%- endif -%}
     """,
-            messages=[
-                ChatMessage(
-                    role="user",
-                    content="{{ input_text }}",
-                )
-            ],
-        ),
-    )
+                messages=[
+                    ChatMessage(
+                        role="user",
+                        content="{{ input_text }}",
+                    )
+                ],
+            ),
+        )
 
-    @classmethod
-    async def initialize(cls, request: gr.Request, llm: str):
-        if cls.started:
+    async def initialize(self, request: gr.Request, llm: str):
+        if self.started:
             return
 
-        await cls.runtime.start()
-        await cls.runtime.register(cls.agent)
+        await self.runtime.start()
+        await self.runtime.register(self.detector)
+        await self.runtime.register(self.agent)
 
         # Switch to the first LLM by default.
-        await cls.switch_llm(request, llm)
+        await self.switch_llm(request, llm)
 
-        cls.started = True
+        self.started = True
 
-    @classmethod
-    async def cleanup(cls, request: gr.Request):
-        await cls.runtime.stop()
-        cls.started = False
+    async def cleanup(self, request: gr.Request):
+        await self.runtime.stop()
+        self.started = False
 
-    @classmethod
-    async def switch_llm(cls, request: gr.Request, llm: str):
+    async def switch_llm(self, request: gr.Request, llm: str):
         settings = json.loads(llm)
         # print(f"Switching LLM to {settings['model']}")
-        cls.agent.constructor.kwargs["client"] = ModelClient(**settings)
 
-    @classmethod
+        client = ModelClient(**settings)
+        self.detector.constructor.kwargs["client"] = client
+        self.agent.constructor.kwargs["client"] = client
+
+    async def detect(self, input_text: str) -> str:
+        if not input_text:
+            return "auto"
+
+        # print(f'Detecting language for "{input_text}"')
+        result = await self.detector.run(
+            ChatMessage(role="user", content=input_text).encode(),
+        )
+        msg = ChatMessage.decode(result)
+        detected = msg.content
+        # print(f"Detected language: {detected}")
+
+        if detected in self.candidate_languages:
+            return detected
+        return "auto"  # Fallback to "auto"
+
     async def translate(
-        cls, input_text: str, source_lang: str, target_lang: str
+        self, input_text: str, source_lang: str, target_lang: str
     ) -> AsyncIterator[str]:
         if not input_text:
             yield ""
@@ -78,7 +107,7 @@ class Translator:
             yield input_text
             return
 
-        result = await cls.agent.run(
+        result = await self.agent.run(
             Input(
                 input_text=input_text, source_lang=source_lang, target_lang=target_lang
             ).encode(),
