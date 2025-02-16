@@ -21,7 +21,7 @@ class Translator:
         self.candidate_languages = [lang for _, lang in languages[1:]]  # Exclude "auto"
 
         langs = "\n".join([f"- {lang}" for lang in self.candidate_languages])
-        self.detector = AgentSpec(
+        self.detection_agent = AgentSpec(
             "detector",
             new(
                 ChatAgent,
@@ -34,7 +34,7 @@ Your output must be one of the following languages (and nothing else):
             ),
         )
 
-        self.agent = AgentSpec(
+        self.translation_agent = AgentSpec(
             "translator",
             new(
                 StructuredAgent,
@@ -60,8 +60,8 @@ Your output must be one of the following languages (and nothing else):
             return
 
         await self.runtime.start()
-        await self.runtime.register(self.detector)
-        await self.runtime.register(self.agent)
+        await self.runtime.register(self.detection_agent)
+        await self.runtime.register(self.translation_agent)
 
         # Switch to the first LLM by default.
         await self.switch_llm(request, llm)
@@ -77,15 +77,15 @@ Your output must be one of the following languages (and nothing else):
         # print(f"Switching LLM to {settings['model']}")
 
         client = ModelClient(**settings)
-        self.detector.constructor.kwargs["client"] = client
-        self.agent.constructor.kwargs["client"] = client
+        self.detection_agent.constructor.kwargs["client"] = client
+        self.translation_agent.constructor.kwargs["client"] = client
 
     async def detect(self, input_text: str) -> str:
         if not input_text:
             return "auto"
 
         # print(f'Detecting language for "{input_text}"')
-        result = await self.detector.run(
+        result = await self.detection_agent.run(
             ChatMessage(role="user", content=input_text).encode(),
         )
         msg = ChatMessage.decode(result)
@@ -111,7 +111,7 @@ Your output must be one of the following languages (and nothing else):
             yield input_text
             return
 
-        result = await self.agent.run(
+        result = await self.translation_agent.run(
             Input(
                 input_text=input_text, source_lang=source_lang, target_lang=target_lang
             ).encode(),
