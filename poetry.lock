@@ -382,13 +382,15 @@ files = [
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
-name = "coagent"
+name = "coagent-python"
 version = "0.0.1"
-description = ""
+description = "An open-source framework for building monolithic or distributed agentic systems, ranging from simple LLM calls to compositional workflows and autonomous agents."
 optional = false
-python-versions = ">=3.10.0,<3.14"
-files = []
-develop = false
+python-versions = "<3.14,>=3.10.0"
+files = [
+    {file = "coagent_python-0.0.1-py3-none-any.whl", hash = "sha256:01baaae8b1fb6e42b3ed801d1ec5dfda8a5c2d2eec64759aaa7df0149ba3621c"},
+    {file = "coagent_python-0.0.1.tar.gz", hash = "sha256:62c6e3a095b9878f22221106ba8c773ce1f579027b4198966deb140a3575e114"},
+]
 
 [package.dependencies]
 blinker = "1.9.0"
@@ -406,12 +408,6 @@ pydantic = ">=2.7.0"
 pygtrie = "2.5.0"
 requests = "2.32.3"
 textual = "0.85.1"
-
-[package.source]
-type = "git"
-url = "https://github.com/OpenCSGs/coagent.git"
-reference = "HEAD"
-resolved_reference = "de1714cb202337b311025ac4f67521c0673dd835"
 
 [[package]]
 name = "colorama"
@@ -3048,4 +3044,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10.0,<3.14"
-content-hash = "cc769ac9d7c977c8b495a5174821ae7b4ee658aaf767439234f535fffee0daed"
+content-hash = "299f9429b35425c9c7eb936e65778ed8d42e2608c61ebd5f0f78bd439bcde11f"
